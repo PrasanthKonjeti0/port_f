@@ -5,12 +5,15 @@ import "./Login.css";
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate(); // initialize navigate
+  const navigate = useNavigate();
+
+  // ✅ Use Railway backend
+  const API_BASE_URL = "https://portb-production.up.railway.app/api";
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("https://portb-production.up.railway.app/api/auth/login", {
+      const response = await fetch(`${API_BASE_URL}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
@@ -20,16 +23,14 @@ function Login() {
         const data = await response.json();
         localStorage.setItem("username", data.username);
 
-        const userResponse = await fetch(
-          `http://localhost:8081/api/auth/user/${data.username}`
-        );
+        // ✅ fetch user details from Railway, not localhost
+        const userResponse = await fetch(`${API_BASE_URL}/auth/user/${data.username}`);
 
         if (userResponse.ok) {
           const userData = await userResponse.json();
           localStorage.setItem("userId", userData.id);
         }
 
-        // Navigate to Home.jsx after successful login
         navigate("/home");
       } else {
         alert("Invalid username or password");
@@ -42,7 +43,7 @@ function Login() {
 
   const handleSignup = async () => {
     try {
-      const response = await fetch("http://localhost:8081/api/auth/signup", {
+      const response = await fetch(`${API_BASE_URL}/auth/signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
@@ -62,13 +63,10 @@ function Login() {
 
   return (
     <div className="page-wrapper">
-      {/* Portfolio app in center */}
       <div className="portfolio-container">
         <h1>Portfolio App</h1>
-      
       </div>
 
-      {/* Login inputs at top-right */}
       <div className="login-top-right">
         <form onSubmit={handleLogin} className="login-inline-form">
           <input
