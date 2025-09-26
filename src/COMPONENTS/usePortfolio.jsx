@@ -15,7 +15,7 @@ export function usePortfolio() {
     const fetchPortfolio = async () => {
       try {
         const response = await fetch(
-          `http://localhost:8081/api/portfolio/user/${userId}`
+          `http://portb-production.up.railway.app/api/portfolio/user/${userId}`
         );
         if (response.ok) {
           const data = await response.json();
